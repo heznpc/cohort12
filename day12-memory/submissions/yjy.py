@@ -1,5 +1,5 @@
 # =========================================================
-# Pokemon LangGraph Adventure (Gemini 2.0 Flash Edition)
+# Pokemon LangGraph Adventure (Gemini 2.5 Flash Edition)
 # =========================================================
 import operator
 from typing import Annotated, List, TypedDict, Optional, Union
@@ -18,11 +18,11 @@ from langgraph.types import interrupt, Command
 from langgraph.checkpoint.memory import InMemorySaver
 
 # ---------------------------------------------------------
-# 1. 모델 설정 (Gemini 2.0 Flash)
+# 1. 모델 설정 (Gemini 2.5 Flash)
 # ---------------------------------------------------------
 # API Key는 환경 변수 GOOGLE_API_KEY에 설정되어 있어야 합니다.
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     temperature=0.7
 )
 
