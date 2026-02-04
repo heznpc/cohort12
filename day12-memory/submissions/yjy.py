@@ -243,7 +243,7 @@ app = builder.compile(checkpointer=InMemorySaver())
 # =========================================================
 
 def run_game_loop():
-    thread_id = "ash_ketchum_ver2"
+    thread_id = "ash_ketchum_ver3" # ID 변경 (새로운 마음으로 시작)
     config = {"configurable": {"thread_id": thread_id}}
 
     print(f"🎮 포켓몬 모험을 시작합니다! (ID: {thread_id})")
@@ -260,22 +260,19 @@ def run_game_loop():
                 config
             )
 
-            # 2. 결과 출력 (AI의 마지막 응답)
+            # 2. 결과 출력 (일반 대화)
             if "messages" in events and events["messages"]:
                 last_msg = events["messages"][-1].content
                 print(f"🤖 시스템/AI: {last_msg}")
 
             # 3. Interrupt 감지 루프
-            # 그래프가 END에 도달하지 않고 멈췄다면(Snapshot에 next가 있다면) Interrupt 상태일 수 있음
             while True:
                 snapshot = app.get_state(config)
 
-                # 더 이상 실행할 태스크가 없으면 루프 탈출 (턴 종료)
+                # 더 이상 실행할 태스크가 없으면 루프 탈출
                 if not snapshot.next:
                     break
 
-                # Interrupt가 걸려있는지 확인
-                # tasks[0].interrupts는 튜플 형태임
                 task = snapshot.tasks[0]
                 if task.interrupts:
                     # Interrupt 값(질문) 가져오기
@@ -285,14 +282,16 @@ def run_game_loop():
                     # 사용자 입력 받기 (Resume)
                     answer = input("   > 선택: ")
 
-                    # Command를 사용해 중단된 지점으로 값 전달하며 재개
+                    # Command를 사용해 재개
                     events = app.invoke(Command(resume=answer), config)
 
-                    # 재개 후 결과 출력 (배틀 중 로그 등)
-                    # 여기서는 전체 로그를 다 보여주기보다, 루프가 끝나고 한 번에 보여주거나
-                    # 필요하면 여기서 print 로직 추가 가능
+                    # ★★★ [수정된 부분] 재개 후 결과 출력 ★★★
+                    # 배틀 로그나 최종 승리 메시지가 여기에 담겨 옴
+                    if "messages" in events and events["messages"]:
+                        last_msg = events["messages"][-1].content
+                        print(f"🤖 시스템/AI: {last_msg}")
+
                 else:
-                    # Interrupt 없이 그냥 다음 단계로 넘어가는 경우 (드뭄)
                     break
 
         except Exception as e:
