@@ -17,6 +17,12 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.types import interrupt, Command
 from langgraph.checkpoint.memory import InMemorySaver
 
+import os
+from dotenv import load_dotenv
+
+# 1. 환경 변수 로드 (이게 없거나, 모델 정의보다 밑에 있으면 에러 남)
+load_dotenv()
+
 # ---------------------------------------------------------
 # 1. 모델 설정 (Gemini 2.5 Flash)
 # ---------------------------------------------------------
